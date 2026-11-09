@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Project3.AboutPage"
+             Title="Про програму">
+
+	<VerticalStackLayout Padding="30" Spacing="15" VerticalOptions="Center">
+		<Label Text="Лабораторна робота №3" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" />
+		<Label Text="Тема: Диспетчер файлів JSON" FontSize="16" HorizontalOptions="Center" />
+		<Label Text="Варіант 20: «Конференції»" FontSize="15" TextColor="#2b5797" HorizontalOptions="Center" />
+
+		<BoxView HeightRequest="1" Color="LightGray" Margin="0,10" />
+
+		<Label Text="Розробила Зуб Людмила Віталіївна" FontSize="14" />
+		<Label Text="2 курс, група К-25" FontSize="14" />
+		<Label Text="2026 рік" FontSize="14" />
+		<Label Text="Програма демонструє роботу з форматом JSON через диспетчер, фільтрацію засобами LINQ та табличне відображення даних у .NET MAUI."
+               FontSize="13" TextColor="Gray" />
+
+		<Button Text="Закрити" Clicked="OnCloseClicked" BackgroundColor="#2b5797" TextColor="White" Margin="0,20,0,0"/>
+	</VerticalStackLayout>
+</ContentPage>
