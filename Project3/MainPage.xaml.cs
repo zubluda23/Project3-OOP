@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 
@@ -175,22 +176,25 @@ public partial class MainPage : ContentPage
         UpdateGridItems(filtered);
     }
 
-    private void OnFilterByFeeClicked(object sender, EventArgs e)
+    private async void OnFilterByFeeClicked(object sender, EventArgs e)
     {
-        if (decimal.TryParse(txtFilterMaxFee.Text, out decimal maxFee))
+        string feeText = txtFilterMaxFee.Text?.Trim().Replace('.', ',') ?? string.Empty;
+        if (decimal.TryParse(feeText, NumberStyles.Number, new CultureInfo("uk-UA"), out decimal maxFee) && maxFee >= 0)
         {
             var filtered = manager.FilterByMaxFee(maxFee);
             UpdateGridItems(filtered);
         }
         else
         {
-            DisplayAlert("Увага", "Введіть коректне число для ціни!", "OK");
+            await DisplayAlert("Увага", "Введіть коректне невід'ємне число для ціни!", "OK");
         }
     }
 
     private void OnResetFilterClicked(object sender, EventArgs e)
     {
         txtFilterField.Text = string.Empty;
+        dtpFilterDeadline.Date = DateTime.Today;
+        txtFilterMaxFee.Text = "5000";
         RefreshGrid();
     }
 
