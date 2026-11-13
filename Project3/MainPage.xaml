@@ -1,96 +1,101 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            xmlns:local="clr-namespace:Project3"
+             xmlns:local="clr-namespace:Project3"
              x:Class="Project3.MainPage"
              Title="Диспетчер JSON: Наукові конференції">
 
-    <Grid RowDefinitions="Auto, Auto, Auto, *, Auto" Padding="15" RowSpacing="10">
+	<Grid RowDefinitions="Auto, Auto, Auto, *, Auto" Padding="15" RowSpacing="10">
 
-        
-        <HorizontalStackLayout Grid.Row="0" Spacing="10">
-            <Button Text="Відкрити JSON..." Clicked="OnOpenFileClicked" BackgroundColor="#2b5797" TextColor="White" />
-            <Button Text="Зберегти JSON" Clicked="OnSaveFileClicked" BackgroundColor="#2b5797" TextColor="White" />
-            <Button Text="Про програму" Clicked="OnAboutClicked" BackgroundColor="#5c2d91" TextColor="White" />
-            <Label x:Name="lblFilePath" Text="conferences.json (за замовчуванням)" VerticalOptions="Center" TextColor="Gray" FontSize="12" />
-        </HorizontalStackLayout>
+	
+		<HorizontalStackLayout Grid.Row="0" Spacing="10">
+			<Button Text="Відкрити JSON..." Clicked="OnOpenFileClicked" BackgroundColor="#2b5797" TextColor="White" />
+			<Button Text="Зберегти JSON" Clicked="OnSaveFileClicked" BackgroundColor="#2b5797" TextColor="White" />
+			<Button Text="Про програму" Clicked="OnAboutClicked" BackgroundColor="#5c2d91" TextColor="White" />
+			<Label x:Name="lblFilePath" Text="Файл не обрано" VerticalOptions="Center" TextColor="Gray" FontSize="12" />
+		</HorizontalStackLayout>
 
-       
-        <Frame Grid.Row="1" Padding="10" BorderColor="LightGray" CornerRadius="8">
-            <VerticalStackLayout Spacing="8">
-                <Label Text="Критерії фільтрації списку (LINQ):" FontAttributes="Bold" FontSize="14" />
-                <Grid ColumnDefinitions="2*, 2*, 2*, Auto" ColumnSpacing="10">
-                    <VerticalStackLayout Grid.Column="0">
-                        <Label Text="1. Тематика:" FontSize="12" />
-                        <Entry x:Name="txtFilterField" Placeholder="Слово..." />
-                        <Button Text="Пошук" Clicked="OnFilterByFieldClicked" HeightRequest="35" FontSize="12" Margin="0,4,0,0"/>
-                    </VerticalStackLayout>
+		
+		<Border Grid.Row="1" Padding="10" Stroke="LightGray" StrokeThickness="1">
+			<Border.StrokeShape>
+				<RoundRectangle CornerRadius="8" />
+			</Border.StrokeShape>
+			<VerticalStackLayout Spacing="8">
+				<Label Text="Критерії фільтрації списку (LINQ):" FontAttributes="Bold" FontSize="14" />
+				<Grid ColumnDefinitions="2*, 2*, 2*, Auto" ColumnSpacing="10">
+					<VerticalStackLayout Grid.Column="0">
+						<Label Text="1. Тематика:" FontSize="12" />
+						<Entry x:Name="txtFilterField" Placeholder="Слово..." />
+						<Button Text="Пошук" Clicked="OnFilterByFieldClicked" HeightRequest="35" FontSize="12" Margin="0,4,0,0"/>
+					</VerticalStackLayout>
 
-                    <VerticalStackLayout Grid.Column="1">
-                        <Label Text="2. Дедлайн до:" FontSize="12" />
-                        <DatePicker x:Name="dtpFilterDeadline" Format="dd.MM.yyyy" />
-                        <Button Text="Пошук" Clicked="OnFilterByDeadlineClicked" HeightRequest="35" FontSize="12" Margin="0,4,0,0"/>
-                    </VerticalStackLayout>
+					<VerticalStackLayout Grid.Column="1">
+						<Label Text="2. Дедлайн до:" FontSize="12" />
+						<DatePicker x:Name="dtpFilterDeadline" Format="dd.MM.yyyy" />
+						<Button Text="Пошук" Clicked="OnFilterByDeadlineClicked" HeightRequest="35" FontSize="12" Margin="0,4,0,0"/>
+					</VerticalStackLayout>
 
-                    <VerticalStackLayout Grid.Column="2">
-                        <Label Text="3. Макс. ціна (грн):" FontSize="12" />
-                        <Entry x:Name="txtFilterMaxFee" Keyboard="Numeric" Text="5000" />
-                        <Button Text="Пошук" Clicked="OnFilterByFeeClicked" HeightRequest="35" FontSize="12" Margin="0,4,0,0"/>
-                    </VerticalStackLayout>
+					<VerticalStackLayout Grid.Column="2">
+						<Label Text="3. Макс. ціна (грн):" FontSize="12" />
+						<Entry x:Name="txtFilterMaxFee" Keyboard="Numeric" Text="5000" />
+						<Button Text="Пошук" Clicked="OnFilterByFeeClicked" HeightRequest="35" FontSize="12" Margin="0,4,0,0"/>
+					</VerticalStackLayout>
 
-                    <Button Grid.Column="3" Text="Скинути фільтри" Clicked="OnResetFilterClicked" 
+					<Button Grid.Column="3" Text="Скинути фільтри" Clicked="OnResetFilterClicked"
                             VerticalOptions="End" HeightRequest="35" BackgroundColor="#6c757d" TextColor="White"/>
-                </Grid>
-            </VerticalStackLayout>
-        </Frame>
+				</Grid>
+			</VerticalStackLayout>
+		</Border>
 
-       
-        <Border Grid.Row="2" BackgroundColor="#f0f2f5" Stroke="LightGray" StrokeThickness="1" Padding="8">
-            <Grid ColumnDefinitions="3*, 2*, 2*, 2*, 1.5*, 1.5*">
-                <Label Grid.Column="0" Text="Назва конференції" FontAttributes="Bold" />
-                <Label Grid.Column="1" Text="Тематика" FontAttributes="Bold" />
-                <Label Grid.Column="2" Text="Організатор" FontAttributes="Bold" />
-                <Label Grid.Column="3" Text="Місце" FontAttributes="Bold" />
-                <Label Grid.Column="4" Text="Дедлайн" FontAttributes="Bold" />
-                <Label Grid.Column="5" Text="Вартість" FontAttributes="Bold" />
-            </Grid>
-        </Border>
+		
+		<Border Grid.Row="2" BackgroundColor="#f0f2f5" Stroke="LightGray" StrokeThickness="1" Padding="8">
+			<Grid ColumnDefinitions="2.5*, 1.5*, 1.5*, 1.2*, 1.5*, 1.2*, 1.2*">
+				<Label Grid.Column="0" Text="Назва конференції" FontAttributes="Bold" />
+				<Label Grid.Column="1" Text="Тематика" FontAttributes="Bold" />
+				<Label Grid.Column="2" Text="Організатор" FontAttributes="Bold" />
+				<Label Grid.Column="3" Text="Місце" FontAttributes="Bold" />
+				<Label Grid.Column="4" Text="Терміни" FontAttributes="Bold" />
+				<Label Grid.Column="5" Text="Дедлайн" FontAttributes="Bold" />
+				<Label Grid.Column="6" Text="Вартість" FontAttributes="Bold" />
+			</Grid>
+		</Border>
 
-        
-        <CollectionView Grid.Row="3" x:Name="conferencesCollection" SelectionMode="Single">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="local:Conference">
-                    <Border Stroke="#e0e0e0" StrokeThickness="0.5" Padding="8">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup Name="CommonStates">
-                                <VisualState Name="Normal" />
-                                <VisualState Name="Selected">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="#d0e2ff" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
 
-                        <Grid ColumnDefinitions="3*, 2*, 2*, 2*, 1.5*, 1.5*">
-                            <Label Grid.Column="0" Text="{Binding Title}" VerticalOptions="Center" FontAttributes="Bold" LineBreakMode="TailTruncation" />
-                            <Label Grid.Column="1" Text="{Binding Field}" VerticalOptions="Center" LineBreakMode="TailTruncation" />
-                            <Label Grid.Column="2" Text="{Binding Organizer}" VerticalOptions="Center" LineBreakMode="TailTruncation" />
-                            <Label Grid.Column="3" Text="{Binding Location}" VerticalOptions="Center" LineBreakMode="TailTruncation" />
-                            <Label Grid.Column="4" Text="{Binding Deadline, StringFormat='{0:dd.MM.yyyy}'}" VerticalOptions="Center" />
-                            <Label Grid.Column="5" Text="{Binding Fee, StringFormat='{0:N2} грн'}" VerticalOptions="Center" />
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+		<CollectionView Grid.Row="3" x:Name="conferencesCollection" SelectionMode="Single">
+			<CollectionView.ItemTemplate>
+				<DataTemplate x:DataType="local:Conference">
+					<Border Stroke="#e0e0e0" StrokeThickness="0.5" Padding="8">
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup Name="CommonStates">
+								<VisualState Name="Normal" />
+								<VisualState Name="Selected">
+									<VisualState.Setters>
+										<Setter Property="BackgroundColor" Value="#d0e2ff" />
+									</VisualState.Setters>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
 
-      
-        <HorizontalStackLayout Grid.Row="4" Spacing="15" HorizontalOptions="Center">
-            <Button Text="Додати..." Clicked="OnAddClicked" BackgroundColor="#107c41" TextColor="White" WidthRequest="130" />
-            <Button Text="Редагувати..." Clicked="OnEditClicked" BackgroundColor="#ff8c00" TextColor="White" WidthRequest="130" />
-            <Button Text="Видалити" Clicked="OnDeleteClicked" BackgroundColor="#d83b01" TextColor="White" WidthRequest="130" />
-        </HorizontalStackLayout>
+						<Grid ColumnDefinitions="2.5*, 1.5*, 1.5*, 1.2*, 1.5*, 1.2*, 1.2*">
+							<Label Grid.Column="0" Text="{Binding Title}" VerticalOptions="Center" FontAttributes="Bold" LineBreakMode="TailTruncation" />
+							<Label Grid.Column="1" Text="{Binding Field}" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+							<Label Grid.Column="2" Text="{Binding Organizer}" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+							<Label Grid.Column="3" Text="{Binding Location}" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+							<Label Grid.Column="4" Text="{Binding StartDate}" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+							<Label Grid.Column="5" Text="{Binding Deadline, StringFormat='{0:dd.MM.yyyy}'}" VerticalOptions="Center" />
+							<Label Grid.Column="6" Text="{Binding Fee, StringFormat='{0:N2} грн'}" VerticalOptions="Center" />
+						</Grid>
+					</Border>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
 
-    </Grid>
+		
+		<HorizontalStackLayout Grid.Row="4" Spacing="15" HorizontalOptions="Center">
+			<Button Text="Додати..." Clicked="OnAddClicked" BackgroundColor="#107c41" TextColor="White" WidthRequest="130" />
+			<Button Text="Редагувати..." Clicked="OnEditClicked" BackgroundColor="#ff8c00" TextColor="White" WidthRequest="130" />
+			<Button Text="Видалити" Clicked="OnDeleteClicked" BackgroundColor="#d83b01" TextColor="White" WidthRequest="130" />
+		</HorizontalStackLayout>
+
+	</Grid>
 </ContentPage>

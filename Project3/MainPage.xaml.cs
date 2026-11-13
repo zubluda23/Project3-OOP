@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 
@@ -10,7 +9,7 @@ namespace Project3;
 public partial class MainPage : ContentPage
 {
     private readonly ConferenceManager manager;
-    private ObservableCollection<Conference> displayedConferences;
+    private readonly ObservableCollection<Conference> displayedConferences;
     private string currentFilePath = string.Empty;
 
     public MainPage()
@@ -21,53 +20,6 @@ public partial class MainPage : ContentPage
         conferencesCollection.ItemsSource = displayedConferences;
 
         lblFilePath.Text = "Файл не обрано";
-    }
-
-    private void EnsureInitialDataCreated()
-    {
-        if (!File.Exists(currentFilePath))
-        {
-            var defaultList = new List<Conference>
-        {
-            new Conference(
-                "Інформаційні технології та комп'ютерна інженерія",
-                "Комп'ютерні науки",
-                "Асоціація IT України",
-                "Київ",
-                "20.10.2026 - 22.10.2026",
-                new DateTime(2026, 9, 15),
-                450.0m
-            ),
-            new Conference(
-                "Сучасні проблеми кібербезпеки",
-                "Кібербезпека",
-                "Держспецзв'язку",
-                "Львів",
-                "12.11.2026 - 14.11.2026",
-                new DateTime(2026, 10, 1),
-                300.0m
-            ),
-            new Conference(
-                "Міжнародний форум хмарних технологій",
-                "Хмарні технології",
-                "Cloud Ukraine Alliance",
-                "Одеса",
-                "05.12.2026 - 07.12.2026",
-                new DateTime(2026, 11, 10),
-                800.0m
-            )
-        };
-
-            var service = new JsonConferenceService();
-            service.SaveToFile(currentFilePath, defaultList);
-        }
-
-        try
-        {
-            manager.LoadData(currentFilePath);
-            lblFilePath.Text = Path.GetFileName(currentFilePath);
-        }
-        catch { }
     }
 
     public async void OnOpenFileClicked(object? sender, EventArgs e)
@@ -105,6 +57,12 @@ public partial class MainPage : ContentPage
 
     public async void OnSaveFileClicked(object? sender, EventArgs e)
     {
+        if (string.IsNullOrWhiteSpace(currentFilePath))
+        {
+            await DisplayAlert("Увага", "Спочатку відкрийте JSON-файл через диспетчер!", "OK");
+            return;
+        }
+
         try
         {
             manager.SaveData(currentFilePath);
@@ -118,11 +76,24 @@ public partial class MainPage : ContentPage
 
     public async void OnAddClicked(object? sender, EventArgs e)
     {
-        var editPage = new ConferenceEditPage((newConf) =>
+        if (string.IsNullOrWhiteSpace(currentFilePath))
         {
-            manager.Add(newConf);
-            manager.SaveData(currentFilePath); 
-            RefreshGrid();
+            await DisplayAlert("Увага", "Спочатку відкрийте JSON-файл через диспетчер!", "OK");
+            return;
+        }
+
+        var editPage = new ConferenceEditPage(async (newConf) =>
+        {
+            try
+            {
+                manager.Add(newConf);
+                manager.SaveData(currentFilePath);
+                RefreshGrid();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Помилка збереження", ex.Message, "OK");
+            }
         });
 
         await Navigation.PushModalAsync(editPage);
@@ -130,6 +101,12 @@ public partial class MainPage : ContentPage
 
     public async void OnEditClicked(object? sender, EventArgs e)
     {
+        if (string.IsNullOrWhiteSpace(currentFilePath))
+        {
+            await DisplayAlert("Увага", "Спочатку відкрийте JSON-файл через диспетчер!", "OK");
+            return;
+        }
+
         if (conferencesCollection.SelectedItem is not Conference selected)
         {
             await DisplayAlert("Попередження", "Оберіть рядок для редагування у таблиці!", "OK");
@@ -138,11 +115,18 @@ public partial class MainPage : ContentPage
 
         int index = manager.GetAll().FindIndex(c => c.Title == selected.Title && c.Deadline == selected.Deadline);
 
-        var editPage = new ConferenceEditPage((updatedConf) =>
+        var editPage = new ConferenceEditPage(async (updatedConf) =>
         {
-            manager.Update(index, updatedConf);
-            manager.SaveData(currentFilePath);
-            RefreshGrid();
+            try
+            {
+                manager.Update(index, updatedConf);
+                manager.SaveData(currentFilePath);
+                RefreshGrid();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Помилка збереження", ex.Message, "OK");
+            }
         }, selected);
 
         await Navigation.PushModalAsync(editPage);
@@ -150,6 +134,12 @@ public partial class MainPage : ContentPage
 
     public async void OnDeleteClicked(object? sender, EventArgs e)
     {
+        if (string.IsNullOrWhiteSpace(currentFilePath))
+        {
+            await DisplayAlert("Увага", "Спочатку відкрийте JSON-файл через диспетчер!", "OK");
+            return;
+        }
+
         if (conferencesCollection.SelectedItem is not Conference selected)
         {
             await DisplayAlert("Попередження", "Оберіть рядок для видалення у таблиці!", "OK");
@@ -159,28 +149,32 @@ public partial class MainPage : ContentPage
         bool confirm = await DisplayAlert("Підтвердження", $"Видалити конференцію \"{selected.Title}\"?", "Так", "Ні");
         if (confirm)
         {
-            int index = manager.GetAll().FindIndex(c => c.Title == selected.Title && c.Deadline == selected.Deadline);
-            manager.Delete(index);
-            manager.SaveData(currentFilePath);
-            RefreshGrid();
+            try
+            {
+                int index = manager.GetAll().FindIndex(c => c.Title == selected.Title && c.Deadline == selected.Deadline);
+                manager.Delete(index);
+                manager.SaveData(currentFilePath);
+                RefreshGrid();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Помилка видалення", ex.Message, "OK");
+            }
         }
     }
 
-    
     private void OnFilterByFieldClicked(object sender, EventArgs e)
     {
         var filtered = manager.FilterByField(txtFilterField.Text);
         UpdateGridItems(filtered);
     }
 
-   
     private void OnFilterByDeadlineClicked(object sender, EventArgs e)
     {
         var filtered = manager.FilterByDeadline(dtpFilterDeadline.Date);
         UpdateGridItems(filtered);
     }
 
- 
     private void OnFilterByFeeClicked(object sender, EventArgs e)
     {
         if (decimal.TryParse(txtFilterMaxFee.Text, out decimal maxFee))
@@ -200,7 +194,7 @@ public partial class MainPage : ContentPage
         RefreshGrid();
     }
 
-    public async void OnAboutClicked(object sender, EventArgs e)
+    public async void OnAboutClicked(object? sender, EventArgs e)
     {
         await Navigation.PushModalAsync(new AboutPage());
     }
