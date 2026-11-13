@@ -15,7 +15,7 @@ public partial class ConferenceEditPage : ContentPage
         _onSaveCallback = onSaveCallback;
         currentConference = existingConference;
 
-        if (currentConference != null)
+        if (currentConference is not null)
         {
             lblPageTitle.Text = "Редагування конференції";
             LoadConferenceData(currentConference);
