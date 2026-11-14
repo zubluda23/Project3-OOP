@@ -1,4 +1,7 @@
-﻿namespace Project3;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+namespace Project3;
 
 
 public class ConferenceManager
@@ -29,7 +32,7 @@ public class ConferenceManager
 
     public void Add(Conference item)
     {
-        if (item != null)
+        if (item is not null)
         {
             conferences.Add(item);
         }
@@ -37,7 +40,7 @@ public class ConferenceManager
 
     public void Update(int index, Conference item)
     {
-        if (index >= 0 && index < conferences.Count && item != null)
+        if (index >= 0 && index < conferences.Count && item is not null)
         {
             conferences[index] = item;
         }
